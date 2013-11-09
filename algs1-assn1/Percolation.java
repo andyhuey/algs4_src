@@ -52,11 +52,11 @@ public class Percolation {
         topSiteN = N*N;
         bottomSiteN = (N*N)+1;
         // connect them to row 1, all cells, and row N all cells.
-        for (int j = 1; j <= N; j++)
-        {
-            uf.union(topSiteN, gridMap[1][j]);
-            uf.union(bottomSiteN, gridMap[N][j]);
-        }
+//        for (int j = 1; j <= N; j++)
+//        {
+//            uf.union(topSiteN, gridMap[1][j]);
+//            uf.union(bottomSiteN, gridMap[N][j]);
+//        }
         // we know it perc's if virtual top is connected to virtual bottom.
     }
     
@@ -64,8 +64,9 @@ public class Percolation {
     public void open(int i, int j)
     {
         checkParms(i, j);
-        // Mark new site as open;
+        // Mark new site as open.
         gridState[i][j] = 1;
+        
         // connect it to all of its adjacent open sites.
         // up to 4 calls to union()
         if (i > 1 && this.isOpen(i-1, j))
@@ -76,6 +77,12 @@ public class Percolation {
             uf.union(gridMap[i][j], gridMap[i][j-1]);
         if (j < N && this.isOpen(i, j+1))
             uf.union(gridMap[i][j], gridMap[i][j+1]);
+        
+        // hook up to top or bottom site if needed
+        if (i == 1)
+            uf.union(topSiteN, gridMap[i][j]);
+        if (i == N)
+            uf.union(bottomSiteN, gridMap[i][j]);
     }
     
     // is site (row i, column j) open?
@@ -113,9 +120,13 @@ public class Percolation {
     public static void main(String[] args)
     {
         // I'm not handling this edge case correctly.
-        Percolation p = new Percolation(1);
-        System.out.println(p.percolates() ? 
-            "It percolates." : "It doesn't percolate.");
+//        Percolation p = new Percolation(2);
+//        System.out.println(p.percolates() ? 
+//            "It percolates." : "It doesn't percolate.");
+//        p.open(1,1);
+//        p.open(2,1);
+//        System.out.println(p.percolates() ? 
+//            "It percolates." : "It doesn't percolate.");
         
 //        Percolation p3 = new Percolation(5);
 //        System.out.println(p3.percolates() ? 
