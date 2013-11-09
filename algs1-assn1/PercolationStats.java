@@ -20,7 +20,7 @@
 public class PercolationStats {
 
     private int N, T;
-    private double results[];
+    private double[] results;
     
     // perform T independent computational experiments on an N-by-N grid  
     public PercolationStats(int N, int T)
@@ -33,49 +33,43 @@ public class PercolationStats {
         this.T = T;        
         results = new double[T];
         
-        for (int i=0; i<T; i++)
-            results[i] = test_iteration();
-            
+        for (int i = 0; i < T; i++)
+            results[i] = testIteration();            
     }
     
     // one iteration of the test. return perc threshold.
-    private double test_iteration()
+    private double testIteration()
     {
         // all sites will be initialized as blocked. 
         Percolation p = new Percolation(N);
         
         //Repeat the following until the system percolates:
-        //Choose a site (row i, column j) uniformly at random among all blocked sites.
+        //Choose a site (row i, column j) uniformly at random 
+        // among all blocked sites.
         //Open the site (row i, column j). 
         int tries = 0;
-        int open_sites = 0;
+        int openSites = 0;
         boolean itPercs = false;
         
-        try
+        while (!itPercs)
         {
-            while (!itPercs)
+            //if (openSites > N*N)
+                //"All sites are open and it still doesn't perc!");
+            tries++;
+            int i = StdRandom.uniform(1, N+1);
+            int j = StdRandom.uniform(1, N+1);
+            //StdOut.printf("%d,%d\n",i,j);
+            if (!p.isOpen(i, j))
             {
-                if (open_sites > N*N)
-                    throw new Exception("All sites are open and it still doesn't perc!");
-                tries++;
-                int i = StdRandom.uniform(1, N+1);
-                int j = StdRandom.uniform(1, N+1);
-                //StdOut.printf("%d,%d\n",i,j);
-                if (!p.isOpen(i,j))
-                {
-                    p.open(i,j);
-                    open_sites++;
-                }
-                itPercs = p.percolates();
-//                if (tries % 100 == 0)
-//                    StdOut.printf("tries=%d, open=%d\n", tries, open_sites);
+                p.open(i, j);
+                openSites++;
             }
+            itPercs = p.percolates();
+//          if (tries % 100 == 0)
+//              StdOut.printf("tries=%d, open=%d\n", tries, openSites);
         }
-        catch (Exception ex)
-        {
-            System.out.println(ex.getMessage());
-        }
-        float threshold = (float)open_sites/(N*N);
+
+        float threshold = (float) openSites / (N*N);
             
 //        StdOut.printf("tries=%d, open=%d, threshold=%.2f\n", 
 //                      tries, open_sites, threshold);
@@ -85,8 +79,8 @@ public class PercolationStats {
     // sample mean of percolation threshold
     public double mean()
     {
-        double sum=0;
-        for (int i=0; i<T; i++)
+        double sum = 0;
+        for (int i = 0; i < T; i++)
             sum += results[i];
         return sum / T;
     } 
@@ -121,7 +115,7 @@ public class PercolationStats {
         int N = Integer.parseInt(args[0]);
         int T = Integer.parseInt(args[1]);
         
-        PercolationStats ps = new PercolationStats(N,T);
+        PercolationStats ps = new PercolationStats(N, T);
         
         // %.16f ?
         StdOut.printf("%-23s = %f\n", "mean", ps.mean());
@@ -139,3 +133,11 @@ public class PercolationStats {
         System.out.println("T=iterations");
     }
 }
+
+//public class PercException extends Exception
+//{
+//    public PercException(String message)
+//    {
+//        super(message);
+//    }
+//}
