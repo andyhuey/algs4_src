@@ -47,7 +47,7 @@ public class Percolation {
             }
         
         // need to create a graph with N^2+2 cells, with the UF class.
-        uf = new WeightedQuickUnionUF(N * N + 2);
+        uf = new WeightedQuickUnionUF((N * N) + 2);
         // create 'virtual' top & bottom sites.
         top_site_n = N*N;
         bottom_site_n = (N*N)+1;
@@ -112,44 +112,34 @@ public class Percolation {
     public static void main(String[] args)
     {
         Percolation p3 = new Percolation(5);
-        if (p3.percolates())
-            System.out.println("It percolates.");
-        else
-            System.out.println("It doesn't percolate.");
+        System.out.println(p3.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
         for (int i=1; i<=5; i++)
             p3.open(i,i);
-        if (p3.percolates())
-            System.out.println("It percolates.");
-        else
-            System.out.println("It doesn't percolate.");
+        System.out.println(p3.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
         
-//        Percolation p = new Percolation(5);
-//        if (p.isOpen(1,1))
-//            System.out.println("1,1 is open.");
-//        p.open(1,1);
-//        if (p.isOpen(1,1))
-//            System.out.println("1,1 is open.");
-//        if (p.percolates())
-//            System.out.println("It percolates.");
-//        else
-//            System.out.println("It doesn't percolate.");
-//        //p.open(6,1);
-//        
-//        // open column 1 in rows 1..5 - should perc.
-//        for (int i=1; i <= 5; i++)
-//            p.open(i,1);
-//        if (p.percolates())
-//            System.out.println("It percolates.");
-//        else
-//            System.out.println("It doesn't percolate.");
-//
-//        // open all in row 1 - should not perc.
-//        Percolation p2 = new Percolation(5);
-//        for (int j=1; j <= 5; j++)
-//            p2.open(1,j);
-//        if (p2.percolates())
-//            System.out.println("It percolates.");
-//        else
-//            System.out.println("It doesn't percolate.");
+        Percolation p = new Percolation(5);
+        if (p.isOpen(1,1))
+            System.out.println("1,1 is open.");
+        p.open(1,1);
+        if (p.isOpen(1,1))
+            System.out.println("1,1 is open.");
+        System.out.println(p.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
+        //p.open(6,1);
+        
+        // open column 1 in rows 1..5 - should perc.
+        for (int i=1; i <= 5; i++)
+            p.open(i,1);
+        System.out.println(p.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
+
+        // open all in row 1 - should not perc.
+        Percolation p2 = new Percolation(5);
+        for (int j=1; j <= 5; j++)
+            p2.open(1,j);
+        System.out.println(p2.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
     }
 }

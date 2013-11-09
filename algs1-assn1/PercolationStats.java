@@ -13,12 +13,14 @@
  * 
  * http://introcs.cs.princeton.edu/java/stdlib/StdOut.java.html
  * http://introcs.cs.princeton.edu/java/stdlib/StdRandom.java.html
+ * http://introcs.cs.princeton.edu/java/stdlib/StdStats.java.html
  *
  *----------------------------------------------------------------*/
 
 public class PercolationStats {
 
-    private int N;
+    private int N, T;
+    private double results[];
     
     // perform T independent computational experiments on an N-by-N grid  
     public PercolationStats(int N, int T)
@@ -26,17 +28,18 @@ public class PercolationStats {
         // check the args.
         if (N <= 0 || T <= 0)
             throw new java.lang.IllegalArgumentException();
-        this.N = N;
         
-        int results[] = new int[T];
+        this.N = N;
+        this.T = T;        
+        results = new double[T];
         
         for (int i=0; i<T; i++)
             results[i] = test_iteration();
             
     }
     
-    // one iteration of the test. return # of tries to get to perc.
-    private int test_iteration()
+    // one iteration of the test. return perc threshold.
+    private double test_iteration()
     {
         // all sites will be initialized as blocked. 
         Percolation p = new Percolation(N);
@@ -52,17 +55,18 @@ public class PercolationStats {
         {
             while (!itPercs)
             {
+                if (open_sites > N*N)
+                    throw new Exception("All sites are open and it still doesn't perc!");
                 tries++;
-                int i = StdRandom.uniform(1, N);
-                int j = StdRandom.uniform(1, N);
+                int i = StdRandom.uniform(1, N+1);
+                int j = StdRandom.uniform(1, N+1);
+                //StdOut.printf("%d,%d\n",i,j);
                 if (!p.isOpen(i,j))
                 {
                     p.open(i,j);
                     open_sites++;
                 }
                 itPercs = p.percolates();
-                if (open_sites > N*N)
-                    throw new Exception("All sites are open and it still doesn't perc!");
 //                if (tries % 100 == 0)
 //                    StdOut.printf("tries=%d, open=%d\n", tries, open_sites);
             }
@@ -71,33 +75,38 @@ public class PercolationStats {
         {
             System.out.println(ex.getMessage());
         }
-        StdOut.printf("tries=%d, open=%d, pct=%.2f\n", 
-                      tries, open_sites, (float)100*open_sites/(N*N));
-        return tries;
+        float threshold = (float)open_sites/(N*N);
+            
+//        StdOut.printf("tries=%d, open=%d, threshold=%.2f\n", 
+//                      tries, open_sites, threshold);
+        return threshold;
     }
  
     // sample mean of percolation threshold
     public double mean()
     {
-        return 0;
+        double sum=0;
+        for (int i=0; i<T; i++)
+            sum += results[i];
+        return sum / T;
     } 
  
     // sample standard deviation of percolation threshold
     public double stddev()
     {
-        return 0;
+        return StdStats.stddev(results);
     }
     
     // returns lower bound of the 95% confidence interval
     public double confidenceLo()             
     {
-        return 0;
+        return mean() - (1.96 * stddev()) / Math.sqrt(T);
     }
     
     // returns upper bound of the 95% confidence interval
     public double confidenceHi()
     {
-        return 0;
+        return mean() + (1.96 * stddev()) / Math.sqrt(T);
     }
     
     // test client
