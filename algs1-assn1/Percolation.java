@@ -90,7 +90,8 @@ public class Percolation {
     public boolean isFull(int i, int j)
     {
         checkParms(i, j);
-        return gridState[i][j] == 2; 
+        //return gridState[i][j] == 2; 
+        return isOpen(i, j) && uf.connected(topSiteN, gridMap[i][j]);
     }
     
     // does the system percolate?
@@ -111,6 +112,11 @@ public class Percolation {
     
     public static void main(String[] args)
     {
+        // I'm not handling this edge case correctly.
+        Percolation p = new Percolation(1);
+        System.out.println(p.percolates() ? 
+            "It percolates." : "It doesn't percolate.");
+        
 //        Percolation p3 = new Percolation(5);
 //        System.out.println(p3.percolates() ? 
 //            "It percolates." : "It doesn't percolate.");
