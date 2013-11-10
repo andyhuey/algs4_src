@@ -11,11 +11,12 @@
  *
  *
  *----------------------------------------------------------------*/
+import java.util.Iterator;
 
-public class Deque<Item> implements Iterable<Item> {
-    
-    private Node<Item> first, last;
-    int size;
+public class Deque<Item> implements Iterable<Item> 
+{
+    private Node first, last;
+    private int size;
     
     // construct an empty deque
     public Deque()
@@ -47,6 +48,11 @@ public class Deque<Item> implements Iterable<Item> {
         first.item = item;
         first.next = oldFirst;
         first.prev = null;
+        // edge case
+        if (oldFirst == null)
+            last = first;
+        else
+            oldFirst.prev = first;
         size++;
     }
     
@@ -60,62 +66,121 @@ public class Deque<Item> implements Iterable<Item> {
         last.item = item;
         last.next = null;
         last.prev = oldLast;
+        // edge case
+        if (oldLast == null)
+            first = last;
+        else
+            oldLast.next = last;
         size++;
     }
     
     // delete and return the item at the front
     public Item removeFirst()
     {
-        // throw a java.util.NoSuchElementException if the client attempts to remove an item from an empty deque
         if (first == null)
             throw new java.util.NoSuchElementException();
         Item item = first.item;
         first = first.next;
         size--;
         // edge case
-        if (last == item)
+        if (size == 0)
             last = null;
+        else
+            first.prev = null;  // break link to prev
         return item;
     }
     
     // delete and return the item at the end
     public Item removeLast()
     {
-        //throw a java.util.NoSuchElementException if the client attempts to remove an item from an empty deque
         if (last == null)
             throw new java.util.NoSuchElementException();
         Item item = last.item;
+        last = last.prev;        
         size--;
+        // edge case
+        if (size == 0)
+            first = null;
+        else
+            last.next = null;  // break link to next
+        return item;
     }
     
     // return an iterator over items in order from front to end
-    public Iterator<Item> iterator()
+    public Iterator<Item> iterator() 
+    { 
+        return new ListIterator(); 
+    }
+
+    private class ListIterator implements Iterator<Item>
     {
-        //todo
-        boolean hasNext()
+        private Node current = first;
+        
+        public boolean hasNext()
         {
-            //todo
+            return current != null;
         }
-        Item next()
+        
+        public Item next()
         {
-            // throw a java.util.NoSuchElementException if the client calls the next() method in the iterator and there are no more items to return. 
-            //todo
+            if (!hasNext())
+                throw new java.util.NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
         }
-        void remove()
+        
+        public void remove()
         {
             throw new java.lang.UnsupportedOperationException();
         }
     }
         
-    private class Node<Item>
+    private class Node
     {
-        Item item;
-        Node next;
-        Node prev;
+        private Item item;
+        private Node next;
+        private Node prev;
     }
         
 
     public static void main(String[] args)
     {
+        String s;
+        Deque<String> dq = new Deque<String>();
+        assert dq.isEmpty();
+        dq.addFirst("Item one");
+        assert !dq.isEmpty();
+        s = dq.removeFirst();
+        assert s == "Item one";
+        assert dq.isEmpty();
+        
+        dq.addLast("Item one");
+        assert !dq.isEmpty();
+        s = dq.removeFirst();
+        assert s == "Item one";
+        assert dq.isEmpty();
+        
+        dq.addLast("Item one");
+        assert !dq.isEmpty();
+        s = dq.removeLast();
+        assert s == "Item one";
+        assert dq.isEmpty();
+        
+        dq.addLast("Item one");
+        dq.addLast("Item two");
+        assert !dq.isEmpty();
+        s = dq.removeFirst();
+        assert s == "Item one";
+        s = dq.removeFirst();
+        assert s == "Item two";
+        assert dq.isEmpty();
+        
+        dq.addLast("Item one");
+        dq.addLast("Item two");
+        for (String s1 : dq)
+        {
+            StdOut.println(s1);
+        }
     }
 }
