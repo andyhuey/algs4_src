@@ -13,22 +13,28 @@
  *----------------------------------------------------------------*/
 
 public class Deque<Item> implements Iterable<Item> {
+    
+    private Node<Item> first, last;
+    int size;
+    
     // construct an empty deque
     public Deque()
     {
-        //todo
+        first = null;
+        last = null;
+        size = 0;
     }
     
     // is the deque empty?
     public boolean isEmpty()
     {
-        return true;
+        return first == null;
     }
     
     // return the number of items on the deque
     public int size()
     {
-        return 0;
+        return size;
     }
     
     // insert the item at the front
@@ -36,7 +42,12 @@ public class Deque<Item> implements Iterable<Item> {
     {
         if (item == null)
             throw new java.lang.NullPointerException();
-        //todo
+        Node oldFirst = first;
+        first = new Node();
+        first.item = item;
+        first.next = oldFirst;
+        first.prev = null;
+        size++;
     }
     
     // insert the item at the end
@@ -44,21 +55,37 @@ public class Deque<Item> implements Iterable<Item> {
     {
         if (item == null)
             throw new java.lang.NullPointerException();
-        //todo
+        Node oldLast = last;
+        last = new Node();
+        last.item = item;
+        last.next = null;
+        last.prev = oldLast;
+        size++;
     }
     
     // delete and return the item at the front
     public Item removeFirst()
     {
         // throw a java.util.NoSuchElementException if the client attempts to remove an item from an empty deque
-        //todo
+        if (first == null)
+            throw new java.util.NoSuchElementException();
+        Item item = first.item;
+        first = first.next;
+        size--;
+        // edge case
+        if (last == item)
+            last = null;
+        return item;
     }
     
     // delete and return the item at the end
     public Item removeLast()
     {
         //throw a java.util.NoSuchElementException if the client attempts to remove an item from an empty deque
-        //todo
+        if (last == null)
+            throw new java.util.NoSuchElementException();
+        Item item = last.item;
+        size--;
     }
     
     // return an iterator over items in order from front to end
@@ -78,8 +105,15 @@ public class Deque<Item> implements Iterable<Item> {
         {
             throw new java.lang.UnsupportedOperationException();
         }
-        
     }
+        
+    private class Node<Item>
+    {
+        Item item;
+        Node next;
+        Node prev;
+    }
+        
 
     public static void main(String[] args)
     {
