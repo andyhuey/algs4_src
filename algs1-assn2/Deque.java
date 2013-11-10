@@ -9,7 +9,6 @@
  *  http://coursera.cs.princeton.edu/algs4/assignments/queues.html
  *  http://coursera.cs.princeton.edu/algs4/checklists/queues.html
  *
- *
  *----------------------------------------------------------------*/
 import java.util.Iterator;
 
@@ -152,28 +151,28 @@ public class Deque<Item> implements Iterable<Item>
         dq.addFirst("Item one");
         assert !dq.isEmpty();
         s = dq.removeFirst();
-        assert s == "Item one";
+        assert s.equals("Item one");
         assert dq.isEmpty();
         
         dq.addLast("Item one");
         assert !dq.isEmpty();
         s = dq.removeFirst();
-        assert s == "Item one";
+        assert s.equals("Item one");
         assert dq.isEmpty();
         
         dq.addLast("Item one");
         assert !dq.isEmpty();
         s = dq.removeLast();
-        assert s == "Item one";
+        assert s.equals("Item one");
         assert dq.isEmpty();
         
         dq.addLast("Item one");
         dq.addLast("Item two");
         assert !dq.isEmpty();
         s = dq.removeFirst();
-        assert s == "Item one";
+        assert s.equals("Item one");
         s = dq.removeFirst();
-        assert s == "Item two";
+        assert s.equals("Item two");
         assert dq.isEmpty();
         
         dq.addLast("Item one");
