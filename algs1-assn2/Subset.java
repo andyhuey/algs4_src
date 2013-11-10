@@ -23,10 +23,18 @@ public class Subset {
             s = StdIn.readString();
             rq.enqueue(s);
         }
+        
         //  print out exactly k strings, uniformly at random.
         int i = 0;
-        while (i++ < k)
-            StdOut.println(rq.dequeue());
+        for (String s1 : rq)
+        {
+            if (++i > k)
+                break;
+            StdOut.println(s1);
+        }
+        
+//        while (i++ < k)
+//            StdOut.println(rq.dequeue());
     }
     
     private static void usage()
