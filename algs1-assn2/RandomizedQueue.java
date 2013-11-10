@@ -70,7 +70,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         Node rNode = first;
         int i = 0;
         int r = randomNodeIndex();
-        StdOut.printf("dequeing node %d of %d.\n", r, size());
+        //StdOut.printf("dequeing node %d of %d.\n", r, size());
         while (i < r)
         {
             rPrevNode = rNode;
