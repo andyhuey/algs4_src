@@ -20,7 +20,7 @@ import java.util.Comparator;
 public class Point implements Comparable<Point> {
 
     // compare points by slope
-    public final Comparator<Point> SLOPE_ORDER;       // YOUR DEFINITION HERE
+    public final Comparator<Point> SLOPE_ORDER = new BySlopeOrder();
 
     private final int x;                              // x coordinate
     private final int y;                              // y coordinate
@@ -79,4 +79,27 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
         /* YOUR CODE HERE */
     }
+    
+    private static class BySlopeOrder implements Comparator<Point>
+    {
+        // Formally, the point (x1, y1) is less than the point (x2, y2)
+        // if and only if the slope (y1 − y0) / (x1 − x0)
+        // is less than the slope (y2 − y0) / (x2 − x0).
+        public int compare(Point p1, Point p2)
+        {
+            // degenerate line seqment - negative infinity
+            if (p1.equals(p2))
+                return double.NEGATIVE.INFINITY;
+            // vertical line - positive infinity
+            if (p1.x == p2.x)
+                return double.POSITIVE_INFINITY;
+            // horizontal line - should return positive zero
+            if (p1.y == p2.y)
+                return +0.0;
+            // all else
+            double slope1 = this.slopeTo(p1);
+            double slope2 = this.slopeTo(p2);
+            return slope1.compareTo(slope2);
+        }
+    }    
 }
