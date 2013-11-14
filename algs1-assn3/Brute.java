@@ -30,13 +30,28 @@ public class Brute {
         if (s1 == s2 && s2 == s3)
         {
             // they're collinear.
-            private Point[4] pLine = new Point[4];
-            p[0] = p[i];
-            p[1] = p[j];
-            p[2] = p[k];
-            p[3] = p[l];
-            // TODO: sort this, then draw p[0] -> p[3].
-            //pLine.sort(pLine)
+            // figure min & max points.
+            // (should really be sorting this...)
+            private Point pMin = p[i];
+            private Point pMax = p[i];
+            int c;
+            c = pMin.compareTo(p[j];
+            if (c < 0) pMin = p[j];
+            if (c > 0) pMax = p[j];
+            
+            c = pMin.compareTo(p[k];
+            if (c < 0) pMin = p[k];
+            if (c > 0) pMax = p[k];
+
+            c = pMin.compareTo(p[l];
+            if (c < 0) pMin = p[l];
+            if (c > 0) pMax = p[l];
+            
+            // draw the line.
+            pMin.drawTo(pMax);
+            // and output the line segment.
+            StdOut.printf("%s -> %s -> %s -> %s\n",
+                          p[i], p[j], p[k], p[l);
         }   
     }
     
@@ -58,7 +73,7 @@ public class Brute {
             int x = in.readInt();
             int y = in.readInt();
             Point p[i] = new Point(x, y);
-            //p[i].draw();
+            p[i].draw();        // we want to draw all the points.
         }
         
         for (int i = 0; i < N; i++)
