@@ -91,7 +91,8 @@ public class Brute {
         // rescale coordinates and turn on animation mode
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
-        StdDraw.show(0);
+        // defer drawing until the end
+        //StdDraw.show(0);
         
         // test
 //        int N = 4;
@@ -116,7 +117,7 @@ public class Brute {
         myBrute.runChecks();
         
         // display to screen all at once
-        StdDraw.show(0);
+        //StdDraw.show(0);
     
     }
 }
