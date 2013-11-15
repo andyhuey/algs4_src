@@ -14,11 +14,31 @@
  *
  *************************************************************************/
 
+import java.util.Arrays;
+
 public class Brute {
 
     private static Point[] p;
     private static int N;
     
+    private static void drawLine(Point[] pLine)
+    {
+        // input shoud be an array of 4 (or more) indices into p.
+        // assert idxs.length == 4;
+        int n = pLine.length;
+        Arrays.sort(pLine);
+        // draw the line.
+        pLine[0].drawTo(pLine[n-1]);
+        // and output the line segment.
+        for (int i = 0; i < n; i++)
+        {
+            StdOut.print(pLine[i]);
+            if (i < n-1)
+                StdOut.print(" -> ");
+        }
+        StdOut.println();
+    }
+
     private static void checkLine(int i, int j, int k, int l)
     {
         // are these four points on a line?
@@ -31,28 +51,12 @@ public class Brute {
         if (s1 == s2 && s2 == s3)
         {
             // they're collinear.
-            // figure min & max points.
-            // (should really be sorting this...)
-            Point pMin = p[i];
-            Point pMax = p[i];
-            int c;
-            c = pMin.compareTo(p[j]);
-            if (c < 0) pMin = p[j];
-            if (c > 0) pMax = p[j];
-            
-            c = pMin.compareTo(p[k]);
-            if (c < 0) pMin = p[k];
-            if (c > 0) pMax = p[k];
-
-            c = pMin.compareTo(p[l]);
-            if (c < 0) pMin = p[l];
-            if (c > 0) pMax = p[l];
-            
-            // draw the line.
-            pMin.drawTo(pMax);
-            // and output the line segment.
-            StdOut.printf("%s -> %s -> %s -> %s\n",
-                          p[i], p[j], p[k], p[l]);
+            Point[] pLine = new Point[4];
+            pLine[0] = p[i];
+            pLine[1] = p[j];
+            pLine[2] = p[k];
+            pLine[3] = p[l];
+            drawLine(pLine);
         }   
     }
     

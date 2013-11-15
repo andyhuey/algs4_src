@@ -20,7 +20,7 @@ public class Fast {
     
     private static void drawLine(Point[] pLine)
     {
-        // input shoud be an array of 4 indices into p.
+        // input shoud be an array of 4 (or more) indices into p.
         // assert idxs.length == 4;
         int n = pLine.length;
         Arrays.sort(pLine);
