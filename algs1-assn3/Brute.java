@@ -16,16 +16,10 @@
 
 public class Brute {
 
-    private Point[] p;
-    private int N;
+    private static Point[] p;
+    private static int N;
     
-    public Brute(Point[] p)
-    {
-        this.p = p;
-        this.N = p.length;
-    }
-    
-    private void checkLine(int i, int j, int k, int l)
+    private static void checkLine(int i, int j, int k, int l)
     {
         // are these four points on a line?
         // To check whether the 4 points p, q, r, and s are collinear,
@@ -62,7 +56,7 @@ public class Brute {
         }   
     }
     
-    public void runChecks()
+    private static void runChecks()
     {
         for (int i = 0; i < N; i++)
             for (int j = 0; j < i; j++)
@@ -71,19 +65,18 @@ public class Brute {
                         checkLine(i, j, k, l);
     }
     
-    public static Point[] getInputArray(String filename)
+    private static void getInputArray(String filename)
     {
         In in = new In(filename);
         
-        int N = in.readInt();
-        Point[] p = new Point[N];
+        N = in.readInt();
+        p = new Point[N];
         
         for (int i = 0; i < N; i++) {
             int x = in.readInt();
             int y = in.readInt();
             p[i] = new Point(x, y);
         }
-        return p;
     }
     
     public static void main(String[] args)
@@ -94,27 +87,16 @@ public class Brute {
         // defer drawing until the end
         //StdDraw.show(0);
         
-        // test
-//        int N = 4;
-//        Point[] p = new Point[4];
-//        p[0] = new Point(1234, 5678);
-//        p[1] = new Point(32000, 10000);
-//        p[2] = new Point(18000, 10000);
-//        p[3] = new Point(19000, 10000);
-
         // read in the input
         String filename = args[0];
-        Point[] p = getInputArray(filename);
-        int N = p.length;
-        
+        getInputArray(filename);
         
         // we want to draw all the points.
         for (int i = 0; i < N; i++) {
             p[i].draw();
         }
         
-        Brute myBrute = new Brute(p);
-        myBrute.runChecks();
+        runChecks();
         
         // display to screen all at once
         //StdDraw.show(0);

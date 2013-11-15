@@ -15,16 +15,10 @@ import java.util.Arrays;
 
 public class Fast {
     
-    private Point[] p;
-    private int N;
+    private static Point[] p;
+    private static int N;
     
-    public Fast(Point[] p)
-    {
-        this.p = p;
-        this.N = p.length;
-    }
-    
-    private void drawLine(Point[] pLine)
+    private static void drawLine(Point[] pLine)
     {
         // input shoud be an array of 4 indices into p.
         // assert idxs.length == 4;
@@ -42,53 +36,61 @@ public class Fast {
         StdOut.println();
     }
     
-    public void runChecks()
+    private static void runChecks()
     {
+        //Arrays.sort(p);
         for (int i = 0; i < N; i++)
         {
             Point[] q = p.clone(); 
             Arrays.sort(q, p[i].SLOPE_ORDER);
             
-//            StdOut.printf("%s -> ", p[i]);
-//            for (Point pt : q)
-//            {
-//                StdOut.printf("%s, ", pt);
-//            }
-//            StdOut.println();
-//            return;
-            
             // any 3 or more points with equal slopes are collinear.
-            for (int j = 0; j <= N - 3; j++)
-            {                
+            int j = 0;
+            while (j <= N - 3)
+            {
                 double s1 = p[i].slopeTo(q[j]);
-                double s2 = p[i].slopeTo(q[j + 1]);
-                double s3 = p[i].slopeTo(q[j + 2]);
-                if (s1 == s2 && s2 == s3)
+                int pts = 1;
+                int k = j + 1;
+                while (k < N)
+                {
+                    if (s1 != p[i].slopeTo(q[k]))
+                        break;
+                    pts++;
+                    k++;
+                }
+                if (pts >= 3)
                 {
                     // they're collinear.
-                    Point[] pLine = new Point[4];
+                    Point[] pLine = new Point[pts+1];
                     pLine[0] = p[i];
-                    for (int k = 0; k < 3; k++)
-                        pLine[k + 1] = q[j + k];
+                    int k1;
+                    for (k1 = 0; k1 < pts; k1++)
+                        pLine[k1 + 1] = q[j + k1];
                     drawLine(pLine);
+                    // we can skip forward, too.
+                    j += k1;
                 }
+                else
+                {
+                    j++;
+                }
+                    
             }
         }
     }
 
-    public static Point[] getInputArray(String filename)
+    private static void getInputArray(String filename)
     {
         In in = new In(filename);
         
-        int N = in.readInt();
-        Point[] p = new Point[N];
+        N = in.readInt();
+        p = new Point[N];
         
         for (int i = 0; i < N; i++) {
             int x = in.readInt();
             int y = in.readInt();
             p[i] = new Point(x, y);
         }
-        return p;
     }
 
     public static void main(String[] args)
@@ -101,16 +103,14 @@ public class Fast {
         
         // read in the input
         String filename = args[0];
-        Point[] p = getInputArray(filename);
-        int N = p.length;        
+        getInputArray(filename);
         
         // we want to draw all the points.
         for (int i = 0; i < N; i++) {
             p[i].draw();
         }
         
-        Fast myFast = new Fast(p);
-        myFast.runChecks();
+        runChecks();
         //StdOut.printf("We're done.\n");
         
         // display to screen all at once

@@ -47,7 +47,7 @@ public class Point implements Comparable<Point> {
     // slope between this point and that point
     public double slopeTo(Point that) {
         // degenerate line seqment - negative infinity
-        if (this.equals(that))
+        if (this.compareTo(that) == 0)
             return Double.NEGATIVE_INFINITY;
         // vertical line - positive infinity
         if (that.x == this.x)
@@ -78,6 +78,9 @@ public class Point implements Comparable<Point> {
     // unit test
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+//        Point p1 = new Point(5,6);
+//        Point p2 = new Point(5,6);
+//        StdOut.println(p1.slopeTo(p2));
     }
     
     private class BySlopeOrder implements Comparator<Point>
