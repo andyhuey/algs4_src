@@ -87,14 +87,8 @@ public class Point implements Comparable<Point> {
         // is less than the slope (y2 - y0) / (x2 - x0).
         public int compare(Point p1, Point p2)
         {
-            // degenerate line seqment - negative infinity
+            // same point
             if (p1.equals(p2))
-                return -1;  //Double.NEGATIVE_INFINITY;
-            // vertical line - positive infinity
-            if (p1.x == p2.x)
-                return +1;  //Double.POSITIVE_INFINITY;
-            // horizontal line - should return positive zero
-            if (p1.y == p2.y)
                 return 0;
             // all else
             double slope1 = Point.this.slopeTo(p1);
