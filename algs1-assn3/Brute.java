@@ -17,7 +17,7 @@
 public class Brute {
 
     private Point[] p;
-    int N;
+    private int N;
     
     public Brute(Point[] p)
     {

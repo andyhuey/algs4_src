@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class Fast {
     
     private Point[] p;
-    int N;
+    private int N;
     
     public Fast(Point[] p)
     {
@@ -48,9 +48,17 @@ public class Fast {
         {
             Point[] q = p.clone(); 
             Arrays.sort(q, p[i].SLOPE_ORDER);
-                        
+            
+//            StdOut.printf("%s -> ", p[i]);
+//            for (Point pt : q)
+//            {
+//                StdOut.printf("%s, ", pt);
+//            }
+//            StdOut.println();
+//            return;
+            
             // any 3 or more points with equal slopes are collinear.
-            for (int j=1; j < N - 3; j++)
+            for (int j = 0; j <= N - 3; j++)
             {                
                 double s1 = p[i].slopeTo(q[j]);
                 double s2 = p[i].slopeTo(q[j + 1]);
@@ -60,8 +68,8 @@ public class Fast {
                     // they're collinear.
                     Point[] pLine = new Point[4];
                     pLine[0] = p[i];
-                    for (int k=0; k < 3; k++)
-                        pLine[k+1] = q[j+k];
+                    for (int k = 0; k < 3; k++)
+                        pLine[k + 1] = q[j + k];
                     drawLine(pLine);
                 }
             }
@@ -103,7 +111,7 @@ public class Fast {
         
         Fast myFast = new Fast(p);
         myFast.runChecks();
-        StdOut.printf("We're done.\n");
+        //StdOut.printf("We're done.\n");
         
         // display to screen all at once
         //StdDraw.show(0);
