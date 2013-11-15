@@ -16,9 +16,9 @@
 
 public class Brute {
 
-    private Point[] p;
+    private static Point[] p;
     
-    private static void checkLine(int i, int j int k, int l)
+    private static void checkLine(int i, int j, int k, int l)
     {
         // are these four points on a line?
         // To check whether the 4 points p, q, r, and s are collinear,
@@ -32,18 +32,18 @@ public class Brute {
             // they're collinear.
             // figure min & max points.
             // (should really be sorting this...)
-            private Point pMin = p[i];
-            private Point pMax = p[i];
+            Point pMin = p[i];
+            Point pMax = p[i];
             int c;
-            c = pMin.compareTo(p[j];
+            c = pMin.compareTo(p[j]);
             if (c < 0) pMin = p[j];
             if (c > 0) pMax = p[j];
             
-            c = pMin.compareTo(p[k];
+            c = pMin.compareTo(p[k]);
             if (c < 0) pMin = p[k];
             if (c > 0) pMax = p[k];
 
-            c = pMin.compareTo(p[l];
+            c = pMin.compareTo(p[l]);
             if (c < 0) pMin = p[l];
             if (c > 0) pMax = p[l];
             
@@ -51,7 +51,7 @@ public class Brute {
             pMin.drawTo(pMax);
             // and output the line segment.
             StdOut.printf("%s -> %s -> %s -> %s\n",
-                          p[i], p[j], p[k], p[l);
+                          p[i], p[j], p[k], p[l]);
         }   
     }
     
@@ -72,7 +72,7 @@ public class Brute {
         for (int i = 0; i < N; i++) {
             int x = in.readInt();
             int y = in.readInt();
-            Point p[i] = new Point(x, y);
+            p[i] = new Point(x, y);
             p[i].draw();        // we want to draw all the points.
         }
         
@@ -80,7 +80,7 @@ public class Brute {
             for (int j = 0; j < i; j++)
                 for (int k = 0; k < j; k++)
                     for (int l = 0; l < k; l++)
-                        this.checkLine(i, j, k, l);
+                        checkLine(i, j, k, l);
 
         // display to screen all at once
         StdDraw.show(0);

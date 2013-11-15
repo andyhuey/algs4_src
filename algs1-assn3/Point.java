@@ -48,10 +48,10 @@ public class Point implements Comparable<Point> {
     public double slopeTo(Point that) {
         // degenerate line seqment - negative infinity
         if (this.equals(that))
-            return double.NEGATIVE.INFINITY;
+            return Double.NEGATIVE_INFINITY;
         // vertical line - positive infinity
         if (that.x == this.x)
-            return double.POSITIVE_INFINITY;
+            return Double.POSITIVE_INFINITY;
         // horizontal line - should return positive zero
         if (that.y == this.y)
             return +0.0;
@@ -80,26 +80,31 @@ public class Point implements Comparable<Point> {
         /* YOUR CODE HERE */
     }
     
-    private static class BySlopeOrder implements Comparator<Point>
+    private class BySlopeOrder implements Comparator<Point>
     {
         // Formally, the point (x1, y1) is less than the point (x2, y2)
-        // if and only if the slope (y1 − y0) / (x1 − x0)
-        // is less than the slope (y2 − y0) / (x2 − x0).
+        // if and only if the slope (y1 - y0) / (x1 - x0)
+        // is less than the slope (y2 - y0) / (x2 - x0).
         public int compare(Point p1, Point p2)
         {
             // degenerate line seqment - negative infinity
             if (p1.equals(p2))
-                return double.NEGATIVE.INFINITY;
+                return -1;  //Double.NEGATIVE_INFINITY;
             // vertical line - positive infinity
             if (p1.x == p2.x)
-                return double.POSITIVE_INFINITY;
+                return +1;  //Double.POSITIVE_INFINITY;
             // horizontal line - should return positive zero
             if (p1.y == p2.y)
-                return +0.0;
+                return 0;
             // all else
-            double slope1 = this.slopeTo(p1);
-            double slope2 = this.slopeTo(p2);
-            return slope1.compareTo(slope2);
+            double slope1 = Point.this.slopeTo(p1);
+            double slope2 = Point.this.slopeTo(p2);
+            if (slope1 < slope2)
+                return -1;
+            else if (slope1 > slope2)
+                return +1;
+            else
+                return 0;
         }
     }    
 }
