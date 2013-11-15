@@ -16,9 +16,16 @@
 
 public class Brute {
 
-    private static Point[] p;
+    private Point[] p;
+    int N;
     
-    private static void checkLine(int i, int j, int k, int l)
+    public Brute(Point[] p)
+    {
+        this.p = p;
+        this.N = p.length;
+    }
+    
+    private void checkLine(int i, int j, int k, int l)
     {
         // are these four points on a line?
         // To check whether the 4 points p, q, r, and s are collinear,
@@ -55,33 +62,59 @@ public class Brute {
         }   
     }
     
+    public void runChecks()
+    {
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < i; j++)
+                for (int k = 0; k < j; k++)
+                    for (int l = 0; l < k; l++)
+                        checkLine(i, j, k, l);
+    }
+    
+    public static Point[] getInputArray(String filename)
+    {
+        In in = new In(filename);
+        
+        int N = in.readInt();
+        Point[] p = new Point[N];
+        
+        for (int i = 0; i < N; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            p[i] = new Point(x, y);
+        }
+        return p;
+    }
+    
     public static void main(String[] args)
     {
         // rescale coordinates and turn on animation mode
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
         StdDraw.show(0);
+        
+        // test
+//        int N = 4;
+//        Point[] p = new Point[4];
+//        p[0] = new Point(1234, 5678);
+//        p[1] = new Point(32000, 10000);
+//        p[2] = new Point(18000, 10000);
+//        p[3] = new Point(19000, 10000);
 
         // read in the input
         String filename = args[0];
-        In in = new In(filename);
+        Point[] p = getInputArray(filename);
+        int N = p.length;
         
-        int N = in.readInt();
-        p = new Point[N];
         
+        // we want to draw all the points.
         for (int i = 0; i < N; i++) {
-            int x = in.readInt();
-            int y = in.readInt();
-            p[i] = new Point(x, y);
-            p[i].draw();        // we want to draw all the points.
+            p[i].draw();
         }
         
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < i; j++)
-                for (int k = 0; k < j; k++)
-                    for (int l = 0; l < k; l++)
-                        checkLine(i, j, k, l);
-
+        Brute myBrute = new Brute(p);
+        myBrute.runChecks();
+        
         // display to screen all at once
         StdDraw.show(0);
     
