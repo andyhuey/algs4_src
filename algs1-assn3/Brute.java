@@ -27,6 +27,7 @@ public class Brute {
         // assert idxs.length == 4;
         int n = pLine.length;
         Arrays.sort(pLine);
+        
         // draw the line.
         pLine[0].drawTo(pLine[n-1]);
         // and output the line segment.

@@ -17,13 +17,26 @@ public class Fast {
     
     private static Point[] p;
     private static int N;
-    
+    private static Point[] pLastLine;  // kludge?
+
     private static void drawLine(Point[] pLine)
     {
         // input shoud be an array of 4 (or more) indices into p.
         // assert idxs.length == 4;
         int n = pLine.length;
         Arrays.sort(pLine);
+
+        // eliminate dups.
+        if (pLastLine != null && pLastLine.length == n)
+        {
+            boolean matches = true;
+            for (int i = 0; i < n; i++)
+                if (pLastLine[i] != pLine[i])
+                    matches = false;
+            if (matches)
+                return;
+        }
+        
         // draw the line.
         pLine[0].drawTo(pLine[n-1]);
         // and output the line segment.
@@ -34,6 +47,7 @@ public class Fast {
                 StdOut.print(" -> ");
         }
         StdOut.println();
+        pLastLine = pLine.clone();
     }
     
     private static void runChecks()
@@ -41,17 +55,20 @@ public class Fast {
         //Arrays.sort(p);
         for (int i = 0; i < N; i++)
         {
-            Point[] q = p.clone(); 
+            //Point[] q = p.clone(); 
+            //StdOut.printf("i=%d, len to copy=%d\n", i, p.length - i);
+            Point[] q = Arrays.copyOfRange(p, i, p.length);
+                
             Arrays.sort(q, p[i].SLOPE_ORDER);
             
             // any 3 or more points with equal slopes are collinear.
             int j = 0;
-            while (j <= N - 3)
+            while (j <= q.length - 3)
             {
                 double s1 = p[i].slopeTo(q[j]);
                 int pts = 1;
                 int k = j + 1;
-                while (k < N)
+                while (k < q.length)
                 {
                     if (s1 != p[i].slopeTo(q[k]))
                         break;
