@@ -16,19 +16,20 @@ public class Board {
     // probably:
     private int N;
     private int[][] tiles;
-    // ...and a MinPQ priority queue?
     
     // construct a board from an N-by-N array of blocks
     // (where blocks[i][j] = block in row i, column j)
+    // the empty cell is represented by a zero.
     public Board(int[][] blocks)
     {
-        //todo
+        this.tiles = blocks.clone();    // maybe?
+        this.N = blocks[0].length;
     }
     
     // board dimension N
     public int dimension()
     {
-        //todo
+        return this.N;  // ?
     }
     
     // number of blocks out of place
@@ -61,7 +62,8 @@ public class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        //todo
+        // probably...?
+        return Arrays.deepEquals(y.tiles, this.tiles);
         
     }
     
@@ -85,4 +87,5 @@ public class Board {
         }
         return s.toString();        
     }
+    
 }

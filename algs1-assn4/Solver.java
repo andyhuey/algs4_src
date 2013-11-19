@@ -12,12 +12,38 @@
  *************************************************************************/
 
 public class Solver {
-    public Solver(Board initial)            // find a solution to the initial board (using the A* algorithm)
-    public boolean isSolvable()             // is the initial board solvable?
-    public int moves()                      // min number of moves to solve initial board; -1 if no solution
-    public Iterable<Board> solution()       // sequence of boards in a shortest solution; null if no solution
-    public static void main(String[] args)  // solve a slider puzzle (given below)
 
+    // MinPQ priority queue?
+    MinPQ<SearchNode> myMinPQ;
+    
+    // find a solution to the initial board (using the A* algorithm)
+    public Solver(Board initial)
+    {
+        //todo
+        myMinPQ = new MinPQ<SearchNode>();
+        SearchNode firstNode = new SearchNode(initial, 0, null);
+        myMinPQ.insert(firstNode);
+    }
+    
+    // is the initial board solvable?
+    public boolean isSolvable()
+    {
+        //todo
+    }
+    
+    // min number of moves to solve initial board; -1 if no solution
+    public int moves()
+    {
+        //todo
+    }
+    
+    // sequence of boards in a shortest solution; null if no solution
+    public Iterable<Board> solution()
+    {
+        //todo
+    }
+
+    // solve a slider puzzle 
     public static void main(String[] args) {
         // create initial board from file
         In in = new In(args[0]);
@@ -40,4 +66,20 @@ public class Solver {
                 StdOut.println(board);
         }
     }
+
+    // interable and/or comparable?
+    private class SearchNode implements Comparable<SearchNode>
+    {
+        private Board currentBoard;
+        private int moveCount;          // # of moves to get here
+        private SearchNode prevNode;    // previous search node
+        
+        public SearchNode(Board currentBoard, int moveCount, SearchNode prevNode)
+        {
+            this.currentBoard = currentBoard;
+            this.moveCount = moveCount;
+            this.prevNode = prevNode;
+        }
+    }
+
 }
