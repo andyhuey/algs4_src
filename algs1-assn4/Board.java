@@ -32,22 +32,51 @@ public class Board {
         return this.N;  // ?
     }
     
+    private int getCell(int n)
+    {
+        // return the cell value for cell n, where n=1..N^2-1
+        int i = (n-1) / N;
+        int j = (n-1) % N;
+        return tiles[i][j];
+    }
+    
     // number of blocks out of place
     public int hamming()
     {
-        //todo
+        int nOut = 0;
+        for (int n = 1; n < N*N; n++)
+            if (getCell(n) != n)
+                nOut++;
+        return nOut;
     }
     
     // sum of Manhattan distances between blocks and goal
     public int manhattan()
     {
-        //todo
+        int nDist = 0;
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                int currVal = tiles[i][j];
+                if (CurrVal == 0)
+                    continue;
+                int i1 = (currVal-1) / N;
+                int j1 = (CurrVal-1) % N;
+                nDist += Math.abs(i - i1);
+                nDist += Math.abs(j - j1);
+            }
+        }
+        return nDist;
     }
     
     // is this board the goal board?
     public boolean isGoal()
     {
-        //todo
+        for (int n = 1; n < N*N; n++)
+            if (getCell(n) != n)
+                return false;
+        return true;
     }
     
     // a board obtained by exchanging two adjacent blocks in the same row
