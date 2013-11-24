@@ -11,6 +11,7 @@
  *
  *************************************************************************/
 
+import java.util.Arrays;
 
 public class Board {
     // probably:
@@ -32,12 +33,28 @@ public class Board {
         return this.N;  // ?
     }
     
+    // exchange tile i with tile j, where i or j=1..N^2-1
+    private void exchTiles(int i, int j) 
+    {
+        int swap = getCell(i);
+        putCell(i, getCell(j));
+        putCell(j, swap);
+    }
+    
     private int getCell(int n)
     {
         // return the cell value for cell n, where n=1..N^2-1
         int i = (n-1) / N;
         int j = (n-1) % N;
         return tiles[i][j];
+    }
+
+    private void putCell(int n, int value)
+    {
+        // set the cell value for cell n, where n=1..N^2-1
+        int i = (n-1) / N;
+        int j = (n-1) % N;
+        tiles[i][j] = value;
     }
     
     // number of blocks out of place
@@ -59,10 +76,10 @@ public class Board {
             for (int j = 0; j < N; j++)
             {
                 int currVal = tiles[i][j];
-                if (CurrVal == 0)
+                if (currVal == 0)
                     continue;
                 int i1 = (currVal-1) / N;
-                int j1 = (CurrVal-1) % N;
+                int j1 = (currVal-1) % N;
                 nDist += Math.abs(i - i1);
                 nDist += Math.abs(j - j1);
             }
@@ -82,7 +99,22 @@ public class Board {
     // a board obtained by exchanging two adjacent blocks in the same row
     public Board twin()
     {
-        //todo
+        int[][] newTiles = this.tiles.clone();
+        if (newTiles[0][0] != 0)
+        {
+            // exchange 1st two cells in 1st row
+            int swap = newTiles[0][0];
+            newTiles[0][0] = newTiles[0][1];
+            newTiles[0][1] = swap;
+        }
+        else
+        {
+            // exchange 1st two cells in second row
+            int swap = newTiles[1][0];
+            newTiles[1][0] = newTiles[1][1];
+            newTiles[1][1] = swap;
+        }
+        return new Board(newTiles);
     }
     
     // does this board equal y?
@@ -92,7 +124,7 @@ public class Board {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         // probably...?
-        return Arrays.deepEquals(y.tiles, this.tiles);
+        return Arrays.deepEquals(((Board)y).tiles, this.tiles);
         
     }
     
