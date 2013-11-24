@@ -23,23 +23,34 @@ public class Board {
     // the empty cell is represented by a zero.
     public Board(int[][] blocks)
     {
-        this.tiles = blocks.clone();    // maybe?
         this.N = blocks[0].length;
+        // deep copy
+        this.tiles = new int[N][];
+        for (int i = 0; i < N; i++)
+            this.tiles[i] = Arrays.copyOf(blocks[i], N);
+    }
+    
+    private int[][] copyOfTiles()
+    {
+        int[][] newTiles = new int[N][];
+        for (int i = 0; i < N; i++)
+            newTiles[i] = Arrays.copyOf(tiles[i], N);
+        return newTiles;
     }
     
     // board dimension N
     public int dimension()
     {
-        return this.N;  // ?
+        return this.N;
     }
-    
+
     // exchange tile i with tile j, where i or j=1..N^2-1
-    private void exchTiles(int i, int j) 
-    {
-        int swap = getCell(i);
-        putCell(i, getCell(j));
-        putCell(j, swap);
-    }
+//    private void exchTiles(int i, int j) 
+//    {
+//        int swap = getCell(i);
+//        putCell(i, getCell(j));
+//        putCell(j, swap);
+//    }
     
     private int getCell(int n)
     {
@@ -99,7 +110,7 @@ public class Board {
     // a board obtained by exchanging two adjacent blocks in the same row
     public Board twin()
     {
-        int[][] newTiles = this.tiles.clone();
+        int[][] newTiles = this.copyOfTiles(); //probably...
         if (newTiles[0][0] != 0)
         {
             // exchange 1st two cells in 1st row
@@ -131,7 +142,57 @@ public class Board {
     // all neighboring boards
     public Iterable<Board> neighbors()
     {
-        //todo
+        // find the empty cell
+        int i0 = 0, j0 = 0;
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                if (tiles[i][j] == 0)
+                {
+                    i0 = i;
+                    j0 = j;
+                    break;
+                }
+            }
+        }
+        //System.out.printf("i0=%d, j0=%d\n", i0, j0);
+        
+        // create the list of neighbors
+        Stack<Board> neighbors = new Stack<Board>();
+        // move uo
+        if (i0 > 0)
+        {
+            int[][] newTiles = this.copyOfTiles();
+            newTiles[i0][j0] = newTiles[i0-1][j0];
+            newTiles[i0-1][j0] = 0;
+            neighbors.push(new Board(newTiles));
+        }
+        // move down
+        if (i0 < N-1)
+        {
+            int[][] newTiles = this.copyOfTiles();
+            newTiles[i0][j0] = newTiles[i0+1][j0];
+            newTiles[i0-1][j0] = 0;
+            neighbors.push(new Board(newTiles));
+        }
+        // move left
+        if (j0 > 0)
+        {
+            int[][] newTiles = this.copyOfTiles();
+            newTiles[i0][j0] = newTiles[i0][j0-1];
+            newTiles[i0][j0-1] = 0;
+            neighbors.push(new Board(newTiles));
+        }
+        // move right
+        if (j0 < N-1)
+        {
+            int[][] newTiles = this.copyOfTiles();
+            newTiles[i0][j0] = newTiles[i0][j0+1];
+            newTiles[i0][j0+1] = 0;
+            neighbors.push(new Board(newTiles));
+        }
+        return neighbors;
     }
     
     // string representation of the board (in the output format specified below)
@@ -149,4 +210,25 @@ public class Board {
         return s.toString();        
     }
     
+    public static void main(String[] args) 
+    {
+        String filename = "8puzzle\\puzzle3x3-unsolvable.txt";
+        // read in the board
+        In in = new In(filename);
+        int N = in.readInt();
+        int[][] tiles = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                tiles[i][j] = in.readInt();
+            }
+        }
+        Board initial = new Board(tiles);
+        System.out.println(initial.toString());
+        
+        // test neighbors
+        for (Board b : initial.neighbors())
+        {
+            System.out.println(b.toString());
+        }
+    }   
 }

@@ -29,18 +29,21 @@ public class Solver {
     public boolean isSolvable()
     {
         //todo
+        return true;
     }
     
     // min number of moves to solve initial board; -1 if no solution
     public int moves()
     {
         //todo
+        return 0;
     }
     
     // sequence of boards in a shortest solution; null if no solution
     public Iterable<Board> solution()
     {
         //todo
+        return new Stack<Board>();
     }
 
     // solve a slider puzzle 
@@ -68,7 +71,7 @@ public class Solver {
     }
 
     // interable and/or comparable?
-    private class SearchNode implements Comparable<SearchNode>
+    private class SearchNode /*implements Comparable<SearchNode>*/
     {
         private Board currentBoard;
         private int moveCount;          // # of moves to get here
