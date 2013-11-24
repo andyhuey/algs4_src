@@ -35,6 +35,9 @@ public class Solver {
     // min number of moves to solve initial board; -1 if no solution
     public int moves()
     {
+        if (!isSolvable())
+            return -1
+                
         //todo
         return 0;
     }

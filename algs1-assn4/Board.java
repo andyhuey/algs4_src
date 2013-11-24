@@ -32,6 +32,7 @@ public class Board {
     
     private int[][] copyOfTiles()
     {
+        // return a deep copy of the tiles array.
         int[][] newTiles = new int[N][];
         for (int i = 0; i < N; i++)
             newTiles[i] = Arrays.copyOf(tiles[i], N);
@@ -110,7 +111,7 @@ public class Board {
     // a board obtained by exchanging two adjacent blocks in the same row
     public Board twin()
     {
-        int[][] newTiles = this.copyOfTiles(); //probably...
+        int[][] newTiles = this.copyOfTiles();
         if (newTiles[0][0] != 0)
         {
             // exchange 1st two cells in 1st row
@@ -134,9 +135,7 @@ public class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        // probably...?
         return Arrays.deepEquals(((Board)y).tiles, this.tiles);
-        
     }
     
     // all neighboring boards
@@ -212,7 +211,8 @@ public class Board {
     
     public static void main(String[] args) 
     {
-        String filename = "8puzzle\\puzzle3x3-unsolvable.txt";
+        //String filename = "8puzzle\\puzzle3x3-unsolvable.txt";
+        String filename = "8puzzle\\ajh_ham_test1.txt";
         // read in the board
         In in = new In(filename);
         int N = in.readInt();
@@ -226,9 +226,25 @@ public class Board {
         System.out.println(initial.toString());
         
         // test neighbors
-        for (Board b : initial.neighbors())
-        {
-            System.out.println(b.toString());
-        }
+//        for (Board b : initial.neighbors())
+//        {
+//            System.out.println(b.toString());
+//        }
+
+        // test equals
+        Board b2 = new Board(tiles);
+        assert b2.equals(initial);
+        // test isGoal
+        assert !b2.isGoal();
+        
+        // test twin
+        b2 = initial.twin();
+        System.out.println(b2.toString());
+        System.out.println(initial.toString());
+    
+        System.out.printf("Hamming=%d\n", initial.hamming());
+        System.out.printf("Manhattan=%d\n", initial.manhattan());
+                          
     }   
+    
 }
