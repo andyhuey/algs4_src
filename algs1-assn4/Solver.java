@@ -4,6 +4,13 @@
  *  Last updated:  11/16/2013
  *
  * Description: 
+ * "First, insert the initial search node (the initial board, 0 moves, 
+ * and a null previous search node) into a priority queue. 
+ * Then, delete from the priority queue the search node with the minimum 
+ * priority, and insert onto the priority queue all neighboring search nodes 
+ * (those that can be reached in one move from the dequeued search node). 
+ * Repeat this procedure until the search node dequeued corresponds 
+ * to a goal board."
  * 
  *  https://class.coursera.org/algs4partI-003/assignment/view?assignment_id=5
  *  http://coursera.cs.princeton.edu/algs4/assignments/8puzzle.html
@@ -19,10 +26,25 @@ public class Solver {
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial)
     {
-        //todo
         myMinPQ = new MinPQ<SearchNode>();
-        SearchNode firstNode = new SearchNode(initial, 0, null);
-        myMinPQ.insert(firstNode);
+        SearchNode myNode = new SearchNode(initial, 0, null);
+        myMinPQ.insert(myNode);
+        // not sure if I should do this right here...
+        myNode = myMinPQ.delMin();
+        Board myBoard = myNode.currentBoard;
+        while (!myBoard.isGoal())
+        {
+            Board prevBoard = myNode.prevNode.currentBoard;
+            for (Board b : myBoard.neighbors())
+            {
+                if (!b.equals(prevBoard))
+                    myMinPQ.insert(
+                        new SearchNode(b, myNode.moveCount + 1, myNode));
+            }
+            myNode = myMinPQ.delMin();
+            myBoard = myNode.currentBoard;
+        }
+        
     }
     
     // is the initial board solvable?
@@ -36,7 +58,7 @@ public class Solver {
     public int moves()
     {
         if (!isSolvable())
-            return -1
+            return -1;
                 
         //todo
         return 0;
@@ -52,7 +74,8 @@ public class Solver {
     // solve a slider puzzle 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In(args[0]);
+        In in = new In("8puzzle\\ajh_ham_test1.txt");
+        //In in = new In(args[0]);
         int N = in.readInt();
         int[][] blocks = new int[N][N];
         for (int i = 0; i < N; i++)
@@ -64,17 +87,16 @@ public class Solver {
         Solver solver = new Solver(initial);
     
         // print solution to standard output
-        if (!solver.isSolvable())
-            StdOut.println("No solution possible");
-        else {
-            StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution())
-                StdOut.println(board);
-        }
+//        if (!solver.isSolvable())
+//            StdOut.println("No solution possible");
+//        else {
+//            StdOut.println("Minimum number of moves = " + solver.moves());
+//            for (Board board : solver.solution())
+//                StdOut.println(board);
+//        }
     }
 
-    // interable and/or comparable?
-    private class SearchNode /*implements Comparable<SearchNode>*/
+    private class SearchNode implements Comparable<SearchNode>
     {
         private Board currentBoard;
         private int moveCount;          // # of moves to get here
@@ -86,6 +108,17 @@ public class Solver {
             this.moveCount = moveCount;
             this.prevNode = prevNode;
         }
+        
+        public int compareTo(SearchNode that) {
+            int thisPri = this.currentBoard.hamming() + this.moveCount;
+            int thatPri = that.currentBoard.hamming() + that.moveCount;
+            
+            if (thisPri < thatPri)
+                return -1;
+            else if (thisPri > thatPri)
+                return 1;
+            else
+                return 0;
+        }        
     }
-
 }

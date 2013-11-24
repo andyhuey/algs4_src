@@ -61,13 +61,13 @@ public class Board {
         return tiles[i][j];
     }
 
-    private void putCell(int n, int value)
-    {
-        // set the cell value for cell n, where n=1..N^2-1
-        int i = (n-1) / N;
-        int j = (n-1) % N;
-        tiles[i][j] = value;
-    }
+//    private void putCell(int n, int value)
+//    {
+//        // set the cell value for cell n, where n=1..N^2-1
+//        int i = (n-1) / N;
+//        int j = (n-1) % N;
+//        tiles[i][j] = value;
+//    }
     
     // number of blocks out of place
     public int hamming()
