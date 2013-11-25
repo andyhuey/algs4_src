@@ -22,8 +22,8 @@ public class Solver {
 
     // MinPQ priority queue
     MinPQ<SearchNode> myMinPQ;
-	// save the goal node, with the backlinks...
-	SearchNode goalNode;
+    // save the goal node, with the backlinks...
+    SearchNode goalNode;
     
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial)
@@ -46,15 +46,59 @@ public class Solver {
             myNode = myMinPQ.delMin();
             myBoard = myNode.currentBoard;
         }
-		goalNode = myNode;
+	goalNode = myNode;
     }
     
     // is the initial board solvable?
     public boolean isSolvable()
     {
         //todo
-		// "the current API requires you to detect infeasiblity in Solver by using two priority queues."
-        return true;
+        // "the current API requires you to detect infeasiblity in Solver by using two priority queues."
+        Board myTwin = initial.twin();
+        MinPQ<SearchNode> myTwinMinPQ;
+
+        myMinPQ = new MinPQ<SearchNode>();
+        SearchNode myNode = new SearchNode(initial, 0, null);
+        myMinPQ.insert(myNode);
+
+        myTwinMinPQ = new MinPQ<SearchNode>();
+        SearchNode myTwinNode = new SearchNode(myTwin, 0, null);
+        myTwinMinPQ.insert(myNode);
+        
+        myNode = myMinPQ.delMin();
+        Board myBoard = myNode.currentBoard;
+        
+        myTwinNode = myTwinMinPQ.delMin();
+        Board myTwinBoard = myTwinNode.currentBoard;
+        
+        
+        while (!myBoard.isGoal() && !myTwinBoard.isGoal())
+        {
+            // process our board...
+            Board prevBoard = myNode.prevNode.currentBoard;
+            for (Board b : myBoard.neighbors())
+            {
+                if (!b.equals(prevBoard))
+                    myMinPQ.insert(
+                        new SearchNode(b, myNode.moveCount + 1, myNode));
+            }
+            myNode = myMinPQ.delMin();
+            myBoard = myNode.currentBoard;
+            
+            // process the twin board...
+            Board prevTwinBoard = myTwinNode.prevNode.currentBoard;
+            for (Board b : myTwinBoard.neighbors())
+            {
+                if (!b.equals(prevTwinBoard))
+                    myTwinMinPQ.insert(
+                        new SearchNode(b, myTwinNode.moveCount + 1, myTwinNode));
+            }
+            myTwinNode = myTwinMinPQ.delMin();
+            myTwinBoard = myTwinNode.currentBoard;
+        }
+	goalNode = myNode;
+
+        return myBoard.isGoal();
     }
     
     // min number of moves to solve initial board; -1 if no solution
@@ -63,7 +107,7 @@ public class Solver {
         if (!isSolvable())
             return -1;
                 
-        //todo
+        // probably need to have the stack here...
         return 0;
     }
     
@@ -71,12 +115,12 @@ public class Solver {
     public Iterable<Board> solution()
     {
         // maybe...
-		Stack<Board> soln = new Stack<Board>();
-		while (myNode != null) 
-		{
-			soln.push(myNode.currentBoard);
-			myNode = myNode.prevNode;
-		}
+        Stack<Board> soln = new Stack<Board>();
+        while (myNode != null) 
+        {
+            soln.push(myNode.currentBoard);
+            myNode = myNode.prevNode;
+        }
         return soln;
     }
 
