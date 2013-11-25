@@ -20,8 +20,10 @@
 
 public class Solver {
 
-    // MinPQ priority queue?
+    // MinPQ priority queue
     MinPQ<SearchNode> myMinPQ;
+	// save the goal node, with the backlinks...
+	SearchNode goalNode;
     
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial)
@@ -44,13 +46,14 @@ public class Solver {
             myNode = myMinPQ.delMin();
             myBoard = myNode.currentBoard;
         }
-        
+		goalNode = myNode;
     }
     
     // is the initial board solvable?
     public boolean isSolvable()
     {
         //todo
+		// "the current API requires you to detect infeasiblity in Solver by using two priority queues."
         return true;
     }
     
@@ -67,8 +70,14 @@ public class Solver {
     // sequence of boards in a shortest solution; null if no solution
     public Iterable<Board> solution()
     {
-        //todo
-        return new Stack<Board>();
+        // maybe...
+		Stack<Board> soln = new Stack<Board>();
+		while (myNode != null) 
+		{
+			soln.push(myNode.currentBoard);
+			myNode = myNode.prevNode;
+		}
+        return soln;
     }
 
     // solve a slider puzzle 
