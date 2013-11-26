@@ -34,26 +34,6 @@ public class Solver {
         this.initial = initial;
         this.isSolvable = null;
         this.soln = null;
-        
-//        myMinPQ = new MinPQ<SearchNode>();
-//        SearchNode myNode = new SearchNode(initial, 0, null);
-//        myMinPQ.insert(myNode);
-//        // not sure if I should do this right here...
-//        myNode = myMinPQ.delMin();
-//        Board myBoard = myNode.currentBoard;
-//        while (!myBoard.isGoal())
-//        {
-//            Board prevBoard = myNode.prevNode.currentBoard;
-//            for (Board b : myBoard.neighbors())
-//            {
-//                if (!b.equals(prevBoard))
-//                    myMinPQ.insert(
-//                        new SearchNode(b, myNode.moveCount + 1, myNode));
-//            }
-//            myNode = myMinPQ.delMin();
-//            myBoard = myNode.currentBoard;
-//        }
-//        goalNode = myNode;
     }
     
     // is the initial board solvable?
@@ -62,7 +42,7 @@ public class Solver {
         if (this.isSolvable != null)
             return this.isSolvable;
         
-        // "the current API requires you to detect infeasiblity in Solver by using two priority queues."
+        // we detect infeasiblity by using two priority queues.
         Board myTwin = initial.twin();
         MinPQ<SearchNode> myTwinMinPQ;
 
@@ -72,7 +52,7 @@ public class Solver {
 
         myTwinMinPQ = new MinPQ<SearchNode>();
         SearchNode myTwinNode = new SearchNode(myTwin, 0, null);
-        myTwinMinPQ.insert(myNode);
+        myTwinMinPQ.insert(myTwinNode);
         
         myNode = myMinPQ.delMin();
         Board myBoard = myNode.currentBoard;
@@ -124,7 +104,7 @@ public class Solver {
                 
         // probably need to have the stack here...
         solution();
-        return soln.size();
+        return soln.size() - 1;
     }
     
     // sequence of boards in a shortest solution; null if no solution
@@ -132,6 +112,12 @@ public class Solver {
     {
         if (this.soln != null)
             return this.soln;
+        
+        if (this.isSolvable == null)
+            isSolvable();
+        
+        if (this.isSolvable == false)
+            return null;
         
         soln = new Stack<Board>();
         SearchNode myNode = goalNode;
@@ -146,8 +132,8 @@ public class Solver {
     // solve a slider puzzle 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In("8puzzle\\ajh_ham_test1.txt");
-        //In in = new In(args[0]);
+        //In in = new In("8puzzle\\puzzle2x2-unsolvable1.txt");
+        In in = new In(args[0]);
         int N = in.readInt();
         int[][] blocks = new int[N][N];
         for (int i = 0; i < N; i++)

@@ -45,14 +45,6 @@ public class Board {
         return this.N;
     }
 
-    // exchange tile i with tile j, where i or j=1..N^2-1
-//    private void exchTiles(int i, int j) 
-//    {
-//        int swap = getCell(i);
-//        putCell(i, getCell(j));
-//        putCell(j, swap);
-//    }
-    
     private int getCell(int n)
     {
         // return the cell value for cell n, where n=1..N^2-1
@@ -61,14 +53,6 @@ public class Board {
         return tiles[i][j];
     }
 
-//    private void putCell(int n, int value)
-//    {
-//        // set the cell value for cell n, where n=1..N^2-1
-//        int i = (n-1) / N;
-//        int j = (n-1) % N;
-//        tiles[i][j] = value;
-//    }
-    
     // number of blocks out of place
     public int hamming()
     {
@@ -112,7 +96,7 @@ public class Board {
     public Board twin()
     {
         int[][] newTiles = this.copyOfTiles();
-        if (newTiles[0][0] != 0)
+        if (newTiles[0][0] != 0 && newTiles[0][1] != 0)
         {
             // exchange 1st two cells in 1st row
             int swap = newTiles[0][0];
@@ -135,7 +119,7 @@ public class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        return Arrays.deepEquals(((Board)y).tiles, this.tiles);
+        return Arrays.deepEquals(((Board) y).tiles, this.tiles);
     }
     
     // all neighboring boards
