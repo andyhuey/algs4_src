@@ -19,40 +19,49 @@
  *************************************************************************/
 
 public class Solver {
-
+    private Board initial;
+    private Boolean isSolvable;
+    private Stack<Board> soln;
+    
     // MinPQ priority queue
-    MinPQ<SearchNode> myMinPQ;
+    private MinPQ<SearchNode> myMinPQ;
     // save the goal node, with the backlinks...
-    SearchNode goalNode;
+    private SearchNode goalNode;
     
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial)
     {
-        myMinPQ = new MinPQ<SearchNode>();
-        SearchNode myNode = new SearchNode(initial, 0, null);
-        myMinPQ.insert(myNode);
-        // not sure if I should do this right here...
-        myNode = myMinPQ.delMin();
-        Board myBoard = myNode.currentBoard;
-        while (!myBoard.isGoal())
-        {
-            Board prevBoard = myNode.prevNode.currentBoard;
-            for (Board b : myBoard.neighbors())
-            {
-                if (!b.equals(prevBoard))
-                    myMinPQ.insert(
-                        new SearchNode(b, myNode.moveCount + 1, myNode));
-            }
-            myNode = myMinPQ.delMin();
-            myBoard = myNode.currentBoard;
-        }
-	goalNode = myNode;
+        this.initial = initial;
+        this.isSolvable = null;
+        this.soln = null;
+        
+//        myMinPQ = new MinPQ<SearchNode>();
+//        SearchNode myNode = new SearchNode(initial, 0, null);
+//        myMinPQ.insert(myNode);
+//        // not sure if I should do this right here...
+//        myNode = myMinPQ.delMin();
+//        Board myBoard = myNode.currentBoard;
+//        while (!myBoard.isGoal())
+//        {
+//            Board prevBoard = myNode.prevNode.currentBoard;
+//            for (Board b : myBoard.neighbors())
+//            {
+//                if (!b.equals(prevBoard))
+//                    myMinPQ.insert(
+//                        new SearchNode(b, myNode.moveCount + 1, myNode));
+//            }
+//            myNode = myMinPQ.delMin();
+//            myBoard = myNode.currentBoard;
+//        }
+//        goalNode = myNode;
     }
     
     // is the initial board solvable?
     public boolean isSolvable()
     {
-        //todo
+        if (this.isSolvable != null)
+            return this.isSolvable;
+        
         // "the current API requires you to detect infeasiblity in Solver by using two priority queues."
         Board myTwin = initial.twin();
         MinPQ<SearchNode> myTwinMinPQ;
@@ -70,12 +79,14 @@ public class Solver {
         
         myTwinNode = myTwinMinPQ.delMin();
         Board myTwinBoard = myTwinNode.currentBoard;
-        
-        
+                
         while (!myBoard.isGoal() && !myTwinBoard.isGoal())
         {
             // process our board...
-            Board prevBoard = myNode.prevNode.currentBoard;
+            Board prevBoard = null;
+            if (myNode.prevNode != null)
+                prevBoard = myNode.prevNode.currentBoard;
+            
             for (Board b : myBoard.neighbors())
             {
                 if (!b.equals(prevBoard))
@@ -86,7 +97,10 @@ public class Solver {
             myBoard = myNode.currentBoard;
             
             // process the twin board...
-            Board prevTwinBoard = myTwinNode.prevNode.currentBoard;
+            Board prevTwinBoard = null;
+            if (myTwinNode.prevNode != null)
+                prevTwinBoard = myTwinNode.prevNode.currentBoard;
+            
             for (Board b : myTwinBoard.neighbors())
             {
                 if (!b.equals(prevTwinBoard))
@@ -96,9 +110,10 @@ public class Solver {
             myTwinNode = myTwinMinPQ.delMin();
             myTwinBoard = myTwinNode.currentBoard;
         }
-	goalNode = myNode;
+        goalNode = myNode;
 
-        return myBoard.isGoal();
+        this.isSolvable = myBoard.isGoal();
+        return this.isSolvable;
     }
     
     // min number of moves to solve initial board; -1 if no solution
@@ -108,14 +123,18 @@ public class Solver {
             return -1;
                 
         // probably need to have the stack here...
-        return 0;
+        solution();
+        return soln.size();
     }
     
     // sequence of boards in a shortest solution; null if no solution
     public Iterable<Board> solution()
     {
-        // maybe...
-        Stack<Board> soln = new Stack<Board>();
+        if (this.soln != null)
+            return this.soln;
+        
+        soln = new Stack<Board>();
+        SearchNode myNode = goalNode;
         while (myNode != null) 
         {
             soln.push(myNode.currentBoard);
@@ -140,13 +159,13 @@ public class Solver {
         Solver solver = new Solver(initial);
     
         // print solution to standard output
-//        if (!solver.isSolvable())
-//            StdOut.println("No solution possible");
-//        else {
-//            StdOut.println("Minimum number of moves = " + solver.moves());
-//            for (Board board : solver.solution())
-//                StdOut.println(board);
-//        }
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
+        }
     }
 
     private class SearchNode implements Comparable<SearchNode>

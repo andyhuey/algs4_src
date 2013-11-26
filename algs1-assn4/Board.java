@@ -172,7 +172,7 @@ public class Board {
         {
             int[][] newTiles = this.copyOfTiles();
             newTiles[i0][j0] = newTiles[i0+1][j0];
-            newTiles[i0-1][j0] = 0;
+            newTiles[i0+1][j0] = 0;
             neighbors.push(new Board(newTiles));
         }
         // move left
